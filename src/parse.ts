@@ -77,6 +77,28 @@ async function formatText( text2, template ) {
         }
 	}
 
+    // This will format internal page links like [link_name]: to an anchor destination
+	text = text.replace( /\[([^\]]+)\]:/g, ( match, p1 ) => {
+		if ( p1.startsWith( '^' ) ) {
+			if ( p1.includes( ' ' ) ) return match;
+			const id = p1.trim().replace( /\s+/g, '-' ).toLowerCase();
+			return `<a href="#${id}-ref" id="${id}"><sup>${p1.substring( 1 )}</sup>:</a>`;
+		}
+		const id = p1.trim().replace( /\s+/g, '-' ).toLowerCase();
+		return `<a href="#${id}-ref" id="${id}">${p1}:</a>`;
+	} );
+
+    // This will format internal page links like [link_name] to an anchor link
+	text = text.replace( /\[([^\]]+)\](?!\(|:|\[)/g, ( match, p1 ) => {
+		if ( p1.startsWith( '^' ) ) {
+			if ( p1.includes( ' ' ) ) return match;
+			const id = p1.trim().replace( /\s+/g, '-' ).toLowerCase();
+			return `<a href="#${id}" id="${id}-ref"><sup>${p1.substring( 1 )}</sup></a>`;
+		}
+		const id = p1.trim().replace( /\s+/g, '-' ).toLowerCase();
+		return `<a href="#${id}" id="${id}-ref">${p1}</a>`;
+	} );
+
     return text;
 }
 
@@ -89,7 +111,7 @@ export default async function parse(
 	templateName,
 	block = undefined
 ) {
-	var md = new markdownIt().use( markdownMark ).use( markdownTable );
+	var md = new markdownIt( { html: true } ).use( markdownMark ).use( markdownTable );
     var blocks2 = [];
 	md.inline.ruler.enable( [ 'mark' ] );
 	var finalString;

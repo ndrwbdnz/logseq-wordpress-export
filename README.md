@@ -21,3 +21,5 @@ The transformations include:
 
 ## Credits
 - This plugin is a forked version of [Logseq PDF Export](https://github.com/sawhney17/logseq-pdf-export) from sawhney17. Thank you!
+
+**Note:** This version of the plugin includes added support for converting logseq bidirectional internal page links (like `[link_name]` and `[link_name]:`) and internal superscript footnotes (like `[^1]` or `[^word]`) to functional HTML anchor points and internal anchor hyperlinks respectively.
